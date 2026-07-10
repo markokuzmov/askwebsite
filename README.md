@@ -1,0 +1,1 @@
+This is a refactored version of the current `ask-for-solutions.com` website built with **Next.JS**
