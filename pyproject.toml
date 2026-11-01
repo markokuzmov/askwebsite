@@ -1,0 +1,20 @@
+[project]
+name = "askwebsite"
+version = "0.1.0"
+description = "ASK Business Solutions site and content pipeline"
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.15"
+dependencies = [
+    "requests (>=2.34.2,<3.0.0)",
+    "beautifulsoup4 (>=4.15.0,<5.0.0)",
+    "markdownify (>=1.2.3,<2.0.0)",
+    "pyyaml (>=6.0.3,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

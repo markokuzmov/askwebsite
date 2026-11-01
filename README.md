@@ -1,81 +1,81 @@
-# ASK Business Solutions - Website Content Migration Repository
+# ASK Business Solutions - Modern Web Platform & Content Repository
 
-This repository contains the extracted text content, page hierarchy, and media assets catalog from [ASK Business Solutions](https://ask-for-solutions.com) (`ask-for-solutions.com`), structured as clean Markdown files with YAML frontmatter.
+Modern Next.js 16 (App Router) + Tailwind CSS replacement for [ask-for-solutions.com](https://ask-for-solutions.com), featuring full static pre-rendering (SSG), Markdown content integration, an online payment portal, and Python data pipelines managed by Poetry.
 
 ---
 
-## Directory Structure
+## Architecture Overview
 
 ```
 askwebsite/
-├── content/
-│   ├── SITE_MAP.md              # Complete site map, navigation menus, forms & payment inventory
-│   ├── media.md                 # Markdown table catalog of all 146 media assets
-│   ├── media.json               # Full JSON metadata for all media assets
-│   ├── pages/                   # All 28 WordPress pages converted to Markdown
-│   │   ├── home.md
-│   │   ├── about-us.md
-│   │   ├── faq.md
-│   │   ├── references.md
-│   │   ├── consultation.md
-│   │   ├── whom-we-can-help.md
-│   │   ├── financial-planning.md
-│   │   └── ...
-│   ├── posts/                   # All 8 blog and advice posts
-│   │   ├── what-do-i-need-a-bookkeeper-for.md
-│   │   ├── whats-so-special-about-your-company.md
-│   │   └── ...
-│   └── products/                # Discovered WooCommerce products and service packages
-│       ├── donation.md          # Payment Center / Donation custom payment portal
-│       ├── bookkeeping-and-reporting.md
-│       ├── in-depth-analysis.md
-│       └── ...
-├── scripts/
-│   └── extract_content.py       # Automated Python extractor script
-├── requirements.txt             # Python dependencies
-└── README.md
+├── content/                     # Extracted WordPress content
+│   ├── SITE_MAP.md             # Inventory of pages, forms, payments & nav
+│   ├── media.md                # 146 media attachments catalog
+│   ├── pages/                  # 28 Markdown pages with YAML frontmatter
+│   ├── posts/                  # 8 Blog & advice posts
+│   └── products/               # E-commerce & service packages
+│
+├── src/                        # Next.js 16 Application (App Router)
+│   ├── app/
+│   │   ├── page.tsx            # Modern homepage
+│   │   ├── layout.tsx          # Root layout with Navbar & Footer
+│   │   ├── [slug]/page.tsx     # Dynamic renderer for any Markdown page
+│   │   ├── posts/[slug]/       # Dynamic renderer for advice/blog posts
+│   │   └── pay/page.tsx        # Online Payment Center (replaces WooCommerce donation)
+│   ├── components/
+│   │   ├── Navbar.tsx          # Responsive navigation & language indicator
+│   │   └── Footer.tsx          # Office address, contact, and quick links
+│   └── lib/
+│       └── content.ts          # Markdown & frontmatter parsing (gray-matter + marked)
+│
+├── scripts/                    # Python data extraction pipeline
+│   └── extract_content.py      # Automated WordPress REST API & live content scraper
+│
+├── pyproject.toml              # Poetry Python dependencies
+├── poetry.lock                 # Poetry lockfile
+├── package.json                # Next.js & React dependencies
+└── tsconfig.json               # TypeScript configuration
 ```
 
 ---
 
-## Content Extraction Details
+## Getting Started
 
-The extraction pipeline (`scripts/extract_content.py`):
-1. **Queries the WordPress REST API endpoints:**
-   - Pages: `/wp-json/wp/v2/pages?per_page=100` (28 pages total)
-   - Posts: `/wp-json/wp/v2/posts?per_page=100` (8 posts total)
-   - Media: `/wp-json/wp/v2/media?per_page=100` (146 assets across 3 paginated pages)
-2. **Visual Composer Shortcode Cleaning & Decoding:**
-   - Strips Visual Composer layout wrappers (`[vc_row]`, `[vc_column]`, `[vc_column_text]`, etc.).
-   - Decodes nested URL-encoded and base64-encoded `[vc_raw_html]` blocks (e.g. on the homepage).
-   - Converts `[vc_btn]` shortcodes to clean Markdown/HTML buttons and links.
-   - Resolves `[vc_single_image]` image IDs to their direct media asset URLs.
-   - Strips embedded slider scripts (`jQuery sliderPro`) and CSS styles.
-3. **Live HTML Fallback for Custom PHP Templates:**
-   - For pages where `content.rendered` is empty in the REST API (such as custom theme templates `testimonials.php`, `faq.php`, `about_me.php`, `can_help.php`, `consultation.php`, `advice.php`), the script fetches the live web page, extracts the main content container (`div.page` / `main.page-content`), and converts the content to GitHub-Flavored Markdown.
-4. **Frontmatter Metadata:**
-   Every page and post Markdown file starts with YAML frontmatter:
-   ```yaml
-   ---
-   title: "Page Title"
-   slug: "page-slug"
-   original_url: "https://ask-for-solutions.com/..."
-   date: "2016-07-14T10:25:33"
-   template: "home.php"
-   content_source: "api" # or "live_html"
-   ---
-   ```
+### 1. Frontend Development (Node.js & Next.js)
+
+Run the local development server:
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+To build the static production bundle:
+```bash
+npm run build
+```
+*(All 42+ pages, posts, and routes are statically pre-rendered in ~1 second).*
 
 ---
 
-## How to Re-Run the Extraction Script
+### 2. Python Environment (Poetry)
 
-1. Install requirements:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Execute the script:
-   ```bash
-   python scripts/extract_content.py
-   ```
-The script will refresh all files inside `content/` and update `content/SITE_MAP.md`.
+The repository uses **Poetry** to manage Python virtual environments and scraping scripts.
+
+To run the content extraction scraper inside Poetry's environment:
+```bash
+poetry run python scripts/extract_content.py
+```
+
+Or activate the shell:
+```bash
+poetry shell
+```
+
+---
+
+## Key Features
+
+1. **Static-First Performance:** React Server Components (RSC) pre-render to pure static HTML for 100/100 Google Lighthouse scores and superior local SEO.
+2. **Git-Backed Content:** Edit any `.md` file in `content/pages/` or `content/posts/` and the site automatically renders the changes.
+3. **Integrated Payment Center (`/pay`):** Modern replacement for the legacy WooCommerce donation page. Allows clients to pay agreed service fees securely.
+4. **Multilingual Navigation:** Ready for international clients with support for English, Russian, Ukrainian, and Polish language consulting.
